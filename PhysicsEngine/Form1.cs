@@ -16,8 +16,8 @@ namespace GUI
         //public Vector dimension = new Vector(10, 10); //dim in meters
 
 
-        Body body = new Body(new Vector(0, 1), new Vector(0, 0), new Vector(0, 0), 10);
-        Body body2 = new Body(new Vector(1, 1), new Vector(3, 0), new Vector(0, 0), 10);
+        Body body = new Body(new Vector(-3, 1), new Vector(-1, 2), new Vector(0, 0), 10);
+        Body body2 = new Body(new Vector(2, 3), new Vector(0, 0), new Vector(0, 0), 10);
         Body body3 = new Body(new Vector(2, 1), new Vector(0, 0), new Vector(0, 0), 10);
         Body body4 = new Body(new Vector(1, 0), new Vector(0, 0), new Vector(0, 0), 10);
         Body body5 = new Body(new Vector(1, 1), new Vector(0, 0), new Vector(0, 0), 10);
@@ -28,40 +28,16 @@ namespace GUI
         Spring spring, spring2, spring3, spring4, spring5, spring6, spring7, spring8, spring9, spring10, spring11, spring12;
         Surface surface, surface2, surface3, surface4;
 
-        double[,] sajt = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-
-
-        List<Body> bodies = new List<Body>();
-
-        List<Spring> springs = new List<Spring>();
-
-        List<Surface> surfaces = new List<Surface>();
 
         Bitmap bitmap = new Bitmap(600, 600);
-        public delegate void PosHandler(double dt);
-        public event PosHandler OnPosChange;
-        public delegate void VelHandler(double dt);
-        public event VelHandler OnVelChange;
-        public delegate void ForceHandler();
-        public event ForceHandler OnForceChange;
-        public delegate void GravityHandler(bool isGravity);
-        public event GravityHandler OnGravity;
-        public delegate void SpringHandler();
-        public event SpringHandler OnSpring;
-        public delegate void DeleteForceHandler();
-        public event DeleteForceHandler OnDelete;
-        public delegate void SurfaceHandler();
-        public event SurfaceHandler OnSurface;
 
         PhysicsTable table = new PhysicsTable();
 
-        const double dt = 0.01;
         public Form1()
         {
-            Matrix matrix = new Matrix(sajt);
-            table.AddBody(body);
+            //table.AddBody(body);
             table.AddBody(body2);
-            table.AddBody(body3);
+            //table.AddBody(body3);
             //bodies.Add(body4);
             //bodies.Add(body5);
             //bodies.Add(body6);
@@ -71,21 +47,21 @@ namespace GUI
 
             //spring = new Spring(body, new Vector(300, 100), 10, 150);
 
-            spring = new Spring(body, body2, 100, 1);
-            spring2 = new Spring(body2, body3, 400, 1);
-            spring3 = new Spring(body3, new Vector(3, 1), 100, 1);
-            spring4 = new Spring(body2, body5, 100, 1.5);
-            spring5 = new Spring(body6, new Vector(0, 2), 100, 1.5);
-            spring6 = new Spring(body4, body5, 100, 1.5);
-            spring7 = new Spring(body4, body7, 100, 1.5);
-            spring8 = new Spring(body5, body6, 100, 1.5);
-            spring9 = new Spring(body5, body8, 100, 1.5);
-            spring10 = new Spring(body6, new Vector(2, 2), 100, 1.5);
-            spring11 = new Spring(body7, body8, 100, 1.5);
-            spring12 = new Spring(body8, new Vector(2, 2), 100, 1.5);
+            //spring = new Spring(body, body2, 100, 1);
+            //spring2 = new Spring(body2, body3, 400, 1);
+            //spring3 = new Spring(body3, new Vector(3, 1), 100, 1);
+            //spring4 = new Spring(body2, body5, 100, 1.5);
+            //spring5 = new Spring(body6, new Vector(0, 2), 100, 1.5);
+            //spring6 = new Spring(body4, body5, 100, 1.5);
+            //spring7 = new Spring(body4, body7, 100, 1.5);
+            //spring8 = new Spring(body5, body6, 100, 1.5);
+            //spring9 = new Spring(body5, body8, 100, 1.5);
+            //spring10 = new Spring(body6, new Vector(2, 2), 100, 1.5);
+            //spring11 = new Spring(body7, body8, 100, 1.5);
+            //spring12 = new Spring(body8, new Vector(2, 2), 100, 1.5);
 
-            table.AddSpring(spring);
-            table.AddSpring(spring2);
+            //table.AddSpring(spring);
+            //table.AddSpring(spring2);
             //springs.Add(spring3);
             //springs.Add(spring4);
             //springs.Add(spring5);
@@ -97,13 +73,13 @@ namespace GUI
             //springs.Add(spring11);
             //springs.Add(spring12);
 
-            surface = new Surface(new Vector(0, 0), new Vector(2, 2), bodies);
-            //surface2 = new Surface(new Vector(2, -3), new Vector(2, 2), bodies);
-            //surface3 = new Surface(new Vector(2, 2), new Vector(-3, 2), bodies);
-            //surface4 = new Surface(new Vector(-3, 2), new Vector(-3, -3), bodies);
 
 
-            //surfaces.Add(surface);
+            table.AddSurface(new Vector(-5, 0), new Vector(5, 0));
+            table.AddSurface(new Vector(0, 0), new Vector(0, 5));
+            table.AddSurface(new Vector(-4, 0), new Vector(-4, 5));
+            table.AddSurface(new Vector(-4, 4), new Vector(0, 4));
+            table.AddSurface(new Vector(3, 3), new Vector(0, 0));
             //surfaces.Add(surface2);
             //surfaces.Add(surface3);
             //surfaces.Add(surface4);
@@ -111,7 +87,7 @@ namespace GUI
             InitializeComponent();
             Timer timer = new Timer()
             {
-                Interval = 10,
+                Interval = 1,
                 Enabled = true
             };
             timer.Tick += Timer_Tick;
