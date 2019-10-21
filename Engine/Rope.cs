@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Rope
+    public class Rope //TODO: nincs kesz :O
     {
-        public Body attachedBody { get; private set; }
-        public Body attachedBody2 { get; private set; }
-        public Vector attachPoint { get; private set; }
-        public Vector beginPoint { get; private set; }
-        public Vector endPoint { get; private set; }
-        public double Length0 { get; private set; }
-        public double Length { get; private set; }
+        internal Body attachedBody { get; private set; }
+        internal Body attachedBody2 { get; private set; }
+        internal Vector attachPoint { get; private set; }
+        internal Vector beginPoint { get; private set; }
+        internal Vector endPoint { get; private set; }
+        internal double Length0 { get; private set; }
+        internal double Length { get; private set; }
 
                
 
@@ -37,7 +37,7 @@ namespace Engine
             Length0 = lenght0;
         }
 
-        public void ApplyRope()
+        internal void ApplyRope()
         {
             beginPoint = attachedBody.Pos;
             if (attachedBody2 != null)

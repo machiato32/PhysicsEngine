@@ -53,13 +53,15 @@ namespace GUI
         public delegate void SurfaceHandler();
         public event SurfaceHandler OnSurface;
 
+        PhysicsTable table = new PhysicsTable();
+
         const double dt = 0.01;
         public Form1()
         {
             Matrix matrix = new Matrix(sajt);
-            bodies.Add(body);
-            //bodies.Add(body2);
-            //bodies.Add(body3);
+            table.AddBody(body);
+            table.AddBody(body2);
+            table.AddBody(body3);
             //bodies.Add(body4);
             //bodies.Add(body5);
             //bodies.Add(body6);
@@ -82,8 +84,8 @@ namespace GUI
             spring11 = new Spring(body7, body8, 100, 1.5);
             spring12 = new Spring(body8, new Vector(2, 2), 100, 1.5);
 
-            springs.Add(spring);
-            springs.Add(spring2);
+            table.AddSpring(spring);
+            table.AddSpring(spring2);
             //springs.Add(spring3);
             //springs.Add(spring4);
             //springs.Add(spring5);
@@ -106,25 +108,6 @@ namespace GUI
             //surfaces.Add(surface3);
             //surfaces.Add(surface4);
 
-            foreach (Body body in bodies)
-            {
-                OnPosChange += body.ApplyVel;
-                OnVelChange += body.ApplyAcc;
-                OnForceChange += body.ApplyForces;
-                OnGravity += body.Gravity;
-                OnDelete += body.DeleteForces;
-            }
-
-            foreach(Spring spring in springs)
-            {
-                OnSpring += spring.ApplySpring;
-            }
-            
-            foreach(Surface surface in surfaces)
-            {
-                OnSurface += surface.CheckBodies;
-            }
-
             InitializeComponent();
             Timer timer = new Timer()
             {
@@ -135,57 +118,13 @@ namespace GUI
             pictureBox1.Image = bitmap;
             timer.Start();
         }
-        int time = 0;
         private void Timer_Tick(object sender, EventArgs e)
         {
-            time += (int)(dt*1000);
+
             bitmap = new Bitmap(600, 600);
-            OnDelete?.Invoke();
-            OnGravity?.Invoke(false);
-            OnSpring?.Invoke();
-            OnSurface?.Invoke();
-            OnForceChange?.Invoke();
-            OnVelChange?.Invoke(dt);
-            OnPosChange?.Invoke(dt);
             using (Graphics gr = Graphics.FromImage(bitmap))
             {
-                for(int i=-10; i<10; i++)
-                {
-                    gr.DrawLine(Pens.LightGray, i * 60, 0, i * 60, 600);
-                    gr.DrawLine(Pens.LightGray, 0, i * 60, 600, i * 60);
-                    if (i == 5)
-                    {
-                        gr.DrawLine(Pens.DarkGray, i * 60, 0, i * 60, 600);
-                        gr.DrawLine(Pens.DarkGray, 0, i * 60, 600, i * 60);
-                    }
-
-                }
-
-                foreach(Body body in bodies)
-                {
-                    gr.FillEllipse(Brushes.Black, (float)body.Pos.Trans().X - 5, (float)body.Pos.Trans().Y - 5, 10, 10);
-                }
-                foreach(Spring spring in springs)
-                {
-                    gr.DrawLine(Pens.Black, (float)spring.beginPoint.Trans().X, (float)spring.beginPoint.Trans().Y, (float)spring.endPoint.Trans().X, (float)spring.endPoint.Trans().Y);
-                }
-                foreach (Surface surface in surfaces)
-                {
-                    gr.DrawLine(Pens.Blue, (float)surface.BeginPoint.Trans().X, (float)surface.BeginPoint.Trans().Y, (float)surface.EndPoint.Trans().X, (float)surface.EndPoint.Trans().Y);
-                }
-                //gr.FillEllipse(Brushes.Red, (float)body2.Pos.Trans().X - 5, (float)body2.Pos.Trans().Y - 5, 10, 10);
-                //gr.FillEllipse(Brushes.Blue, (float)body3.Pos.Trans().X - 5, (float)body3.Pos.Trans().Y - 5, 10, 10);
-                //Vector massCenter = (body.Pos * body.Mass + body2.Pos * body2.Mass /*+ body3.Pos * body3.Mass*/) / (body.Mass + body2.Mass/* + body3.Mass*/);
-                //gr.FillEllipse(Brushes.Green, (float)massCenter.Trans().X - 5, (float)massCenter.Trans().Y - 5, 10, 10);
-
-                //gr.DrawLine(Pens.Black, (float)spring.beginPoint.Trans().X, (float)spring.beginPoint.Trans().Y, (float)spring.endPoint.Trans().X, (float)spring.endPoint.Trans().Y);
-                //gr.DrawLine(Pens.Black, (float)spring2.beginPoint.Trans().X, (float)spring2.beginPoint.Trans().Y, (float)spring2.endPoint.Trans().X, (float)spring2.endPoint.Trans().Y);
-                //gr.DrawLine(Pens.Black, (float)spring3.beginPoint.Trans().X, (float)spring3.beginPoint.Trans().Y, (float)spring3.endPoint.Trans().X, (float)spring3.endPoint.Trans().Y);
-                double energy = body.KineticEnergy() + body2.KineticEnergy() /*+ body3.KineticEnergy()*/ + spring.SpringEnergy() + spring2.SpringEnergy() + spring3.SpringEnergy();
-                gr.DrawString(energy.ToString(), new Font(FontFamily.GenericSansSerif, 30), Brushes.Black, 10, 30);
-                gr.DrawString(time.ToString(), new Font(FontFamily.GenericSansSerif, 30), Brushes.Black, 10, 80);
-
-                gr.FillEllipse(Brushes.Black, 5, 300-(float)(energy), 10, 10);
+                table.OnTick(gr);
             }
             pictureBox1.Image = bitmap;
         }

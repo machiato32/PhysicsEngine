@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,14 @@ namespace Engine
 {
     public class Spring
     {
-        public Body attachedBody { get; private set; }
-        public Body attachedBody2 { get; private set; }
-        public Vector attachPoint { get; private set; }
-        public Vector beginPoint { get; private set; }
-        public Vector endPoint { get; private set; }
-        public double K { get; private set; }
-        public double Length0 { get; private set; }
-        public double Length { get; private set; }
+        internal Body attachedBody { get; private set; }
+        internal Body attachedBody2 { get; private set; }
+        internal Vector attachPoint { get; private set; }
+        internal Vector beginPoint { get; private set; }
+        internal Vector endPoint { get; private set; }
+        internal double K { get; private set; }
+        internal double Length0 { get; private set; }
+        internal double Length { get; private set; }
 
                
 
@@ -38,8 +39,12 @@ namespace Engine
             K = k;
             Length0 = lenght0;
         }
+        internal void DrawSpring(Graphics gr)
+        {
+            gr.DrawLine(Pens.Black, (float)this.beginPoint.Trans().X, (float)this.beginPoint.Trans().Y, (float)this.endPoint.Trans().X, (float)this.endPoint.Trans().Y);
+        }
 
-        public void ApplySpring()
+        internal void ApplySpring()
         {
             beginPoint = attachedBody.Pos;
             if (attachedBody2 != null)
@@ -50,7 +55,7 @@ namespace Engine
             attachedBody.forces.Add(K * (Length0 - Length)*(beginPoint-endPoint).Norm());
             if(attachedBody2!=null) attachedBody2.forces.Add(-K * (Length0 - Length) * (beginPoint - endPoint).Norm());
         }
-        public double SpringEnergy()
+        internal double SpringEnergy()
         {
             beginPoint = attachedBody.Pos;
             if (attachedBody2 != null)

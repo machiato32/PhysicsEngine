@@ -8,12 +8,12 @@ namespace Engine
 {
     public class Vector
     {
-        public const double dim = 60;
+        internal const double dim = 60;
         
-        public double X { get; private set; }
-        public double Y { get; private set; }
-        public double Angle { get; private set; }
-        public double Length { get; private set; }
+        internal double X { get; private set; }
+        internal double Y { get; private set; }
+        internal double Angle { get; private set; }
+        internal double Length { get; private set; }
 
         public Vector(double angle, double length, bool ang)
         {
@@ -45,7 +45,7 @@ namespace Engine
 
 
 
-        public Vector Trans()
+        internal Vector Trans()
         {
             return new Vector(300 + dim * X, 300 - dim * Y); 
         }

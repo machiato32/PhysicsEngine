@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +9,10 @@ namespace Engine
 {
     public class Body
     {
-        public Vector Pos { get; private set; }
-        public Vector Vel { get; internal set; }
-        public Vector Acc { get; private set; }
-        public double Mass { get; private set; }
+        internal Vector Pos { get; private set; }
+        internal Vector Vel { get; set; }
+        internal Vector Acc { get; private set; }
+        internal double Mass { get; private set; }
 
         internal List<Vector> forces = new List<Vector>();
 
@@ -22,16 +23,20 @@ namespace Engine
             Acc = acc;
             Mass = mass;
         }
-        public void DeleteForces()
+        internal void DrawBody(Graphics gr)
+        {
+            gr.FillEllipse(Brushes.Black, (float)this.Pos.Trans().X - 5, (float)this.Pos.Trans().Y - 5, 10, 10);
+        }
+        internal void DeleteForces()
         {
             forces = new List<Vector>();
         }
-        public void Gravity(bool isGravity)
+        internal void Gravity(bool isGravity)
         {
             if(isGravity)
                 forces.Add(new Vector(0, -10));
         }
-        public void ApplyForces()
+        internal void ApplyForces()
         {
             Vector allForce = new Vector(0, 0);
             foreach(Vector force in forces)
@@ -40,16 +45,16 @@ namespace Engine
             }
             Acc = allForce / Mass;
         }
-        public void ApplyAcc(double dt)
+        internal void ApplyAcc(double dt)
         {
             Vel += Acc * dt;
         }
 
-        public void ApplyVel(double dt)
+        internal void ApplyVel(double dt)
         {
             Pos += Vel * dt;
         }
-        public double KineticEnergy()
+        internal double KineticEnergy()
         {
             return 0.5 * Mass * Math.Pow(Vel.Length, 2);
         }

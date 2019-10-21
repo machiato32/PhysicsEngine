@@ -9,8 +9,8 @@ namespace Engine
     public class Matrix
     {
         double[,] matrix;
-        public int NumR { get; private set; }
-        public int NumC { get; private set; }
+        internal int NumR { get; private set; }
+        internal int NumC { get; private set; }
         public double this[int x, int y]
         {
             get { return matrix[x, y]; }
