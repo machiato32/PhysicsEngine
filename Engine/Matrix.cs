@@ -58,7 +58,7 @@ namespace Engine
         {
             if (a.NumC == b.NumR)
             {
-                double[,] newMatrix = new double[a.NumR, a.NumC];
+                double[,] newMatrix = new double[a.NumR, b.NumC];
                 for (int i = 0; i < a.NumR; i++)
                 {
                     for (int j = 0; j <b.NumC; j++)
@@ -103,6 +103,26 @@ namespace Engine
         public static Matrix operator *(Vector v, Matrix a)
         {
             return new Matrix(new double[,] { { v.X }, { v.Y } }) * a;
+        }
+
+        public static Matrix Identity(int dim)
+        {
+            double[,] identity = new double[dim, dim];
+            for(int i = 0; i<dim; i++)
+            {
+                for(int j =0; j < dim; j++)
+                {
+                    identity[i, j] = (i == j) ? 1 : 0;
+                }
+            }
+            return new Matrix(identity);
+        }
+
+        public static Vector Rotate(double angle, Vector v)
+        {
+            Matrix m = new Matrix(new double[,] { { Math.Cos(angle), -Math.Sin(angle) }, { Math.Sin(angle), Math.Cos(angle) } });
+
+            return m * v;
         }
         public double Det()
         {

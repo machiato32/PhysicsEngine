@@ -87,7 +87,7 @@ namespace Engine
             double s = (beginPoint.Y - endPoint.Y) * (this.X - beginPoint.X) / (beginPoint.X - endPoint.X) + beginPoint.Y - this.Y;
             return this.X>=beginPoint.X && this.X<=endPoint.X && s <= 0.1 && s >= 0;
         }
-        public bool NextToLine(Vector beginPoint, Vector endPoint)
+        public bool NextToLine(Vector beginPoint, Vector endPoint) //TODO: ha a kovetkezo frameben tulmenne
         {
             if ((beginPoint - endPoint).X == 0)
             {
@@ -107,24 +107,31 @@ namespace Engine
         public Vector Mirror(Vector beginPoint, Vector endPoint)
         {
             Vector line = endPoint - beginPoint;
-            if (line.Y == 0)
-            {
-                return new Vector(this.X, -this.Y);
-            }
-            if (line.X == 0)
-            {
-                return new Vector(-this.X, this.Y);
-            }
             Vector e = line.Norm();
-            double m = (endPoint.Y - beginPoint.Y) / (endPoint.X - beginPoint.X);
-            double b = (endPoint.Y - beginPoint.Y) * (-beginPoint.X) / (endPoint.X - beginPoint.X) + beginPoint.Y;
-            double aLength = b / Math.Sqrt(1 + Math.Pow(m, 2));
-            Vector a = new Vector(e.Angle + Math.PI / 2, aLength, true);
-
-            return 2 * e * (this * e) - this + 2 * a;
+            Matrix projector = Vector.Diadic(e, e);
+            Matrix mirror = 2 * projector - Matrix.Identity(2);
+            Vector returnab = (mirror * this);
+            return returnab;
         }
 
-        public double NormAngle(double angle)
+        public static Matrix Diadic(Vector v, Vector u)
+        {
+            return new Matrix(new double[,] { { v.X }, {v.Y } }) * new Matrix(new double[,] { { u.X, u.Y } });
+        }
+
+        public static double NormCosAngle(double angle)
+        {
+            while (angle < -Math.PI / 2) 
+            {
+                angle +=  Math.PI;
+            }
+            while (angle > Math.PI / 2) 
+            {
+                angle -= Math.PI;
+            }
+            return angle;
+        }
+        public static double NormAngle(double angle)
         {
             while (angle < 0)
             {

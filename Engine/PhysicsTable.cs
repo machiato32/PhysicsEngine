@@ -41,10 +41,13 @@ namespace Engine
         }
         public void AddSpring(Spring spring)
         {
+            springs.Add(spring);
             OnSpring += spring.ApplySpring;
         }
-        public void AddSurface(Surface surface)
+        public void AddSurface(Vector beginPoint, Vector endPoint)
         {
+            Surface surface = new Surface(beginPoint, endPoint, bodies);
+            surfaces.Add(surface);
             OnSurface += surface.CheckBodies;
         }
 

@@ -14,8 +14,16 @@ namespace Engine
 
         public Surface(Vector beginPoint, Vector endPoint, List<Body> bodies)
         {
-            BeginPoint = beginPoint;
-            EndPoint = endPoint;
+            if (beginPoint.X <= endPoint.X)
+            { 
+                BeginPoint = beginPoint;
+                EndPoint = endPoint;
+            }
+            else
+            {
+                BeginPoint = endPoint;
+                EndPoint = beginPoint;
+            }
             Angle = (endPoint - beginPoint).Angle;
             Length = (EndPoint - BeginPoint).Length;
             this.bodies = bodies;
@@ -41,14 +49,19 @@ namespace Engine
                     {
                         allFroce += force;
                     }
-                    //Vector planeForce = new Vector(allFroce.)
+                    
                     Vector xComp = allFroce.GetXComp();
                     Vector yComp = allFroce.GetYComp();
 
-                    Vector surfaceX = new Vector(xComp.Angle - Angle, xComp.Length * Math.Sin(Angle), true);
-                    Vector surfaceY = new Vector(yComp.Angle + Angle, yComp.Length * Math.Cos(Angle), true);
+                    Vector normVec = Matrix.Rotate(Vector.NormCosAngle(Angle), new Vector(0, 1));
+                    Matrix projector = Vector.Diadic(normVec, normVec);
 
-                    Vector surfaceForce = surfaceX + surfaceY;
+                    Vector surfaceForce = projector * allFroce;
+
+                    //Vector surfaceX = new Vector(xComp.Angle - Angle, xComp.Length * Math.Sin(Angle), true);
+                    //Vector surfaceY = new Vector(yComp.Angle + Angle, yComp.Length * Math.Cos(Angle), true);
+
+                    //Vector surfaceForce = surfaceX + surfaceY;
                     if (Math.Sign((EndPoint - BeginPoint).X) == Math.Sign(surfaceForce.X))
                     {
                         body.forces.Add(-surfaceForce);
