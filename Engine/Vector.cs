@@ -78,12 +78,20 @@ namespace Engine
         {
             return v.Length * u.Length * Math.Cos(Math.Abs(v.Angle - u.Angle));
         }
+
+        public static double VectorMultAbs(Vector v, Vector u)
+        {
+            return v.X * u.Y - u.X * v.Y;
+        }
+
         public Vector Norm()
         {
             return this / this.Length;
         }
         public bool OnLine(Vector beginPoint, Vector endPoint)
         {
+            
+
             double s = (beginPoint.Y - endPoint.Y) * (this.X - beginPoint.X) / (beginPoint.X - endPoint.X) + beginPoint.Y - this.Y;
             return this.X>=beginPoint.X && this.X<=endPoint.X && s <= 0.1 && s >= 0;
         }
@@ -104,14 +112,22 @@ namespace Engine
         {
             return new Vector(0, Y);
         }
-        public Vector Mirror(Vector beginPoint, Vector endPoint)
+        public Vector MirrorVel(Vector beginPoint, Vector endPoint)
         {
             Vector line = endPoint - beginPoint;
             Vector e = line.Norm();
             Matrix projector = Vector.Diadic(e, e);
             Matrix mirror = 2 * projector - Matrix.Identity(2);
-            Vector returnab = (mirror * this);
-            return returnab;
+            return (mirror * this);
+        }
+
+        public Vector MirrorPos(Vector beginPoint, Vector endPoint)
+        {
+            Vector line = endPoint - beginPoint;
+            Vector e = line.Norm();
+            Matrix projector = Vector.Diadic(e, e);
+            Matrix mirror = 2 * projector - Matrix.Identity(2);
+            return (mirror * this) - (mirror - Matrix.Identity(2)) * beginPoint;
         }
 
         public static Matrix Diadic(Vector v, Vector u)

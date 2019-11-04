@@ -97,7 +97,7 @@ namespace GUI
         private void Timer_Tick(object sender, EventArgs e)
         {
 
-            bitmap = new Bitmap(600, 600);
+             bitmap = new Bitmap(600, 600);
             using (Graphics gr = Graphics.FromImage(bitmap))
             {
                 table.OnTick(gr);

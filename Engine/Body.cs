@@ -9,7 +9,7 @@ namespace Engine
 {
     public class Body
     {
-        internal Vector Pos { get; private set; }
+        internal Vector Pos { get; set; }
         internal Vector Vel { get; set; }
         internal Vector Acc { get; private set; }
         internal double Mass { get; private set; }
@@ -33,8 +33,8 @@ namespace Engine
         }
         internal void Gravity(bool isGravity)
         {
-            if(isGravity)
-                forces.Add(new Vector(0, -10));
+            if (isGravity)
+                forces.Add(new Vector(0, -20) * Mass);
         }
         internal void ApplyForces()
         {

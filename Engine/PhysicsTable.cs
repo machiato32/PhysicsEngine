@@ -28,7 +28,7 @@ namespace Engine
         internal delegate void SurfaceHandler();
         internal event SurfaceHandler OnSurface;
 
-        const double dt = 0.01;
+        internal const double dt = 0.01;
 
         public void AddBody(Body body)
         {
@@ -56,10 +56,18 @@ namespace Engine
             OnDelete?.Invoke();
             OnGravity?.Invoke(true);
             OnSpring?.Invoke();
-            OnSurface?.Invoke();
+            for(int i=0;i<Surface.stillColliding.Count; i++)
+            {
+                Surface.stillColliding[i] = false;
+            }
+            do
+            {
+                OnSurface?.Invoke();
+            } while (Surface.stillColliding.Contains(true));
             OnForceChange?.Invoke();
             OnVelChange?.Invoke(dt);
-            OnPosChange?.Invoke(dt); for (int i = -10; i < 10; i++)
+            OnPosChange?.Invoke(dt);
+            for (int i = -10; i < 10; i++)
             {
                 gr.DrawLine(Pens.LightGray, i * 60, 0, i * 60, 600);
                 gr.DrawLine(Pens.LightGray, 0, i * 60, 600, i * 60);
