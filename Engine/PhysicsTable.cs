@@ -12,6 +12,7 @@ namespace Engine
         List<Body> bodies = new List<Body>();
         List<Surface> surfaces = new List<Surface>();
         List<Spring> springs = new List<Spring>();
+        List<Rope> ropes = new List<Rope>();
 
         internal delegate void PosHandler(double dt);
         internal event PosHandler OnPosChange;
@@ -23,6 +24,8 @@ namespace Engine
         internal event GravityHandler OnGravity;
         internal delegate void SpringHandler();
         internal event SpringHandler OnSpring;
+        internal delegate void RopeHandler();
+        internal event RopeHandler OnRope;
         internal delegate void DeleteForceHandler();
         internal event DeleteForceHandler OnDelete;
         internal delegate void SurfaceHandler();
@@ -51,17 +54,28 @@ namespace Engine
             OnSurface += surface.CheckBodies;
         }
 
+        public void AddRope(Rope rope)
+        {
+            ropes.Add(rope);
+            OnRope += rope.ApplyRope;
+        }
+
         public void OnTick(Graphics gr)
         {
             OnDelete?.Invoke();
             OnGravity?.Invoke(true);
             OnSpring?.Invoke();
+            OnRope?.Invoke();
             for(int i=0;i<Surface.stillColliding.Count; i++)
             {
                 Surface.stillColliding[i] = false;
             }
             do
             {
+                for (int i = 0; i < Surface.stillColliding.Count; i++)
+                {
+                    Surface.stillColliding[i] = false;
+                }
                 OnSurface?.Invoke();
             } while (Surface.stillColliding.Contains(true));
             OnForceChange?.Invoke();
@@ -85,6 +99,10 @@ namespace Engine
             foreach (Spring spring in springs)
             {
                 spring.DrawSpring(gr);
+            }
+            foreach (Rope rope in ropes)
+            {
+                rope.DrawRope(gr);
             }
             foreach (Surface surface in surfaces)
             {

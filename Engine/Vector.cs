@@ -14,16 +14,35 @@ namespace Engine
         internal double Y { get; private set; }
         internal double Angle { get; private set; }
         internal double Length { get; private set; }
+        internal Vector baseX, baseY;
+        internal static readonly Vector defBaseX = new Vector(1, 0);
+        internal static readonly Vector defBaseY = new Vector(0, 1);
 
-        public Vector(double angle, double length, bool ang)
+        public Vector(double angle, double length, bool ang, Vector baseX = null, Vector baseY = null)
         {
             Angle = angle;
             Length = length;
             X = Length * Math.Cos(Angle);
             Y = Length * Math.Sin(Angle);
+            if (baseX == null)
+            {
+                this.baseX = defBaseX;
+            }
+            else
+            {
+                this.baseX = baseX;
+            }
+            if (baseY == null)
+            {
+                this.baseY = defBaseY;
+            }
+            else
+            {
+                this.baseY = baseY;
+            }
         }
 
-        public Vector(double x, double y)
+        public Vector(double x, double y, Vector baseX = null, Vector baseY = null)
         {
             X = x;
             Y = y;
@@ -40,7 +59,22 @@ namespace Engine
             {
                 Angle = -Math.Acos(X / Length);
             }
-            
+            if (baseX == null)
+            {
+                this.baseX = defBaseX;
+            }
+            else
+            {
+                this.baseX = baseX;
+            }
+            if (baseY == null)
+            {
+                this.baseY = defBaseY;
+            }
+            else
+            {
+                this.baseY = defBaseY;
+            }
         }
 
 
@@ -115,6 +149,14 @@ namespace Engine
         public Vector MirrorVel(Vector beginPoint, Vector endPoint)
         {
             Vector line = endPoint - beginPoint;
+            Vector e = line.Norm();
+            Matrix projector = Vector.Diadic(e, e);
+            Matrix mirror = 2 * projector - Matrix.Identity(2);
+            return (mirror * this);
+        }
+        public Vector MirrorVel(Vector toMirror)
+        {
+            Vector line = toMirror;
             Vector e = line.Norm();
             Matrix projector = Vector.Diadic(e, e);
             Matrix mirror = 2 * projector - Matrix.Identity(2);

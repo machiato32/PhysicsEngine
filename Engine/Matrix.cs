@@ -11,11 +11,12 @@ namespace Engine
         double[,] matrix;
         internal int NumR { get; private set; }
         internal int NumC { get; private set; }
+        internal Vector baseX, baseY;
         public double this[int x, int y]
         {
             get { return matrix[x, y]; }
         }
-        public Matrix(double[,] matrix)
+        public Matrix(double[,] matrix, Vector baseX = null, Vector baseY = null)
         {
             NumR = matrix.GetLength(0);
             NumC = matrix.GetLength(1);
@@ -27,6 +28,22 @@ namespace Engine
                 {
                     this.matrix[i, j] = matrix[i,j];
                 }
+            }
+            if (baseX == null)
+            {
+                this.baseX = Vector.defBaseX;
+            }
+            else
+            {
+                this.baseX = baseX;
+            }
+            if (baseY == null)
+            {
+                this.baseY = Vector.defBaseY;
+            }
+            else
+            {
+                this.baseY = baseY;
             }
         }
 

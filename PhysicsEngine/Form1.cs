@@ -17,7 +17,7 @@ namespace GUI
 
 
         Body body = new Body(new Vector(-3, 1), new Vector(-1, 2), new Vector(0, 0), 10);
-        Body body2 = new Body(new Vector(2, 3), new Vector(0, 0), new Vector(0, 0), 10);
+        Body body2 = new Body(new Vector(0, -2), new Vector(10, 0), new Vector(0, 0), 10);
         Body body3 = new Body(new Vector(2, 1), new Vector(0, 0), new Vector(0, 0), 10);
         Body body4 = new Body(new Vector(1, 0), new Vector(0, 0), new Vector(0, 0), 10);
         Body body5 = new Body(new Vector(1, 1), new Vector(0, 0), new Vector(0, 0), 10);
@@ -75,19 +75,23 @@ namespace GUI
 
 
 
-            table.AddSurface(new Vector(-5, 0), new Vector(5, 0));
-            table.AddSurface(new Vector(0, 0), new Vector(0, 5));
-            table.AddSurface(new Vector(-4, 0), new Vector(-4, 5));
-            table.AddSurface(new Vector(-4, 4), new Vector(0, 4));
-            table.AddSurface(new Vector(3, 3), new Vector(0, 0));
+            //table.AddSurface(new Vector(-5, 0), new Vector(5, 0));
+            //table.AddSurface(new Vector(0, 0), new Vector(0, 5));
+            //table.AddSurface(new Vector(-4, 0), new Vector(-4, 5));
+            //table.AddSurface(new Vector(-4, 4), new Vector(0, 4));
+            //table.AddSurface(new Vector(3, 3), new Vector(0, 0));
             //surfaces.Add(surface2);
             //surfaces.Add(surface3);
             //surfaces.Add(surface4);
 
+            table.AddRope(new Rope(body2, new Vector(0, 1), 3));
+            table.AddSpring(new Spring(body2, new Vector(2, 2), 20, 1));
+
+
             InitializeComponent();
             Timer timer = new Timer()
             {
-                Interval = 1,
+                Interval = 10,
                 Enabled = true
             };
             timer.Tick += Timer_Tick;

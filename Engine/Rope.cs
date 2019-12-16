@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,11 @@ namespace Engine
             Length0 = lenght0;
         }
 
+        internal void DrawRope(Graphics gr)
+        {
+            gr.DrawLine(Pens.Red, (float)this.beginPoint.Trans().X, (float)this.beginPoint.Trans().Y, (float)this.endPoint.Trans().X, (float)this.endPoint.Trans().Y);
+        }
+
         internal void ApplyRope()
         {
             beginPoint = attachedBody.Pos;
@@ -47,7 +53,23 @@ namespace Engine
             Length = (beginPoint - endPoint).Length;
             if (Length >= Length0)
             {
+                if (attachedBody2 != null)
+                {
 
+                }
+                else
+                {
+                    Vector allFroce = new Vector(0, 0);
+                    foreach (Vector force in attachedBody.forces)
+                    {
+                        allFroce += force;
+                    }
+
+                    Vector velNextIter = attachedBody.Vel + allFroce / attachedBody.Mass * PhysicsTable.dt;
+
+                    Vector toMirror = new Vector((beginPoint - endPoint).Angle + Math.PI / 2, 2, true);
+                    attachedBody.Vel = velNextIter.MirrorVel(toMirror);
+                }
             }
             //if (attachedBody2 != null) attachedBody2.forces.Add(-K * (Length0 - Length) * (beginPoint - endPoint).Norm());
         }

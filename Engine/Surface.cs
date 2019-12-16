@@ -63,27 +63,29 @@ namespace Engine
                 Vector posTransf = body.Pos - surfaceMiddle;
                 Vector posTransfNextIter = posNextIter - surfaceMiddle;
 
-                if (body.Pos.OnLine(BeginPoint, EndPoint))
+                Vector a = 1.0 / 2 * surfaceVect - posTransf;
+                Vector b = - 1.0 / 2 * surfaceVect - posTransf;
+                Vector c = posTransfNextIter - posTransf;
+
+
+                if ( false && body.Pos.OnLine(BeginPoint, EndPoint))
                 {
-                    Vector normVec = Matrix.Rotate(Vector.NormCosAngle(Angle), new Vector(0, 1));
-                    Matrix projector = Vector.Diadic(normVec, normVec);
+                    Vector normVec = surfaceVect/surfaceVect.Length;
+                    Matrix projector = Matrix.Identity(2) - Vector.Diadic(normVec, normVec);
 
                     Vector surfaceForce = projector * allFroce;
-                    if (Math.Sign((EndPoint - BeginPoint).X) == Math.Sign(surfaceForce.X))
-                    {
+                    //if (Math.Sign((EndPoint - BeginPoint).X) == Math.Sign(surfaceForce.X))
+                    //{
                         body.forces.Add(-surfaceForce);
-                    }
+                        body.Vel = new Vector(body.Vel.X, 0);
+                    //}
                 }
                 else
                 //if (body.Pos.NextToLine(BeginPoint, EndPoint))
-                if (!stillColliding[Counter] && ((posTransf + posTransfNextIter) / 2).Length < (surfaceVect / 2).Length && Math.Sign(Vector.VectorMultAbs(surfaceVect, posTransf)) != Math.Sign(Vector.VectorMultAbs(surfaceVect, posTransfNextIter)))
+                if (Math.Sign(Vector.VectorMultAbs(c, a)) != Math.Sign(Vector.VectorMultAbs(c,b)) && Math.Sign(Vector.VectorMultAbs(surfaceVect, posTransf)) != Math.Sign(Vector.VectorMultAbs(surfaceVect, posTransfNextIter)))
                 {
-                    body.Vel = body.Vel.MirrorVel(BeginPoint, EndPoint);
+                    body.Vel = velNextIter.MirrorVel(BeginPoint, EndPoint);
                     stillColliding[Counter] = true;
-                }
-                else if(stillColliding[Counter])
-                {
-                    stillColliding[Counter] = false;
                 }
             }
         }
